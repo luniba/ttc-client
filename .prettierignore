@@ -1,0 +1,9 @@
+dist/
+node_modules/
+.next/
+.turbo/
+coverage/
+pnpm-lock.yaml
+.pnpm-store/# Shared byte-for-byte with api/internal/bsdate (CI compares them)
+lib/bs-date/*.json
+public/animations/
