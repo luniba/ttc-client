@@ -12,7 +12,6 @@ export type User = {
   email: string
   name: string
   role: Role
-  avatarUrl: string | null
   emailVerified: boolean
 }
 
