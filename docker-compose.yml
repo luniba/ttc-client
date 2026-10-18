@@ -1,0 +1,13 @@
+services:
+  ttc-client:
+    image: ghcr.io/luniba/ttc-client:latest
+    container_name: ttc-client
+    restart: unless-stopped
+    ports:
+      - "3010:3010"
+    networks:
+      - web
+
+networks:
+  web:
+    external: true

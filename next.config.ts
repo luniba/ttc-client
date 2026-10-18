@@ -17,6 +17,7 @@ const securityHeaders = [
 ]
 
 const nextConfig: NextConfig = {
+  output: "standalone",
   headers: async () => [{ source: "/:path*", headers: securityHeaders }],
   // Same-origin API: the browser calls /api/*, which reaches the Nest backend (API_PREFIX=api).
   rewrites: async () => [
