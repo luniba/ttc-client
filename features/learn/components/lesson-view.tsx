@@ -1,4 +1,4 @@
-import { Download, ExternalLink, FileText, Link2 } from "lucide-react"
+import { Download, ExternalLink, Eye, FileText, Link2 } from "lucide-react"
 
 import type {
   CourseModule,
@@ -35,16 +35,17 @@ export function LessonView({ module: m }: { module: CourseModule }) {
   )
 }
 
+// A file opens in the browser first (a PDF shows in the viewer); saving it is a separate button. A link just opens.
 function MaterialItem({ material: x }: { material: Material }) {
   const isFile = x.type === "file"
   const Icon = isFile ? FileText : Link2
   return (
-    <li>
+    <li className="flex items-stretch gap-2">
       <a
         href={x.url}
         target="_blank"
         rel="noopener noreferrer"
-        className="group flex items-center gap-4 rounded-xl border border-neutral-200 p-4 transition-colors hover:border-neutral-300 hover:bg-neutral-50"
+        className="group flex min-w-0 flex-1 items-center gap-4 rounded-xl border border-neutral-200 p-4 transition-colors hover:border-neutral-300 hover:bg-neutral-50"
       >
         <span className="grid size-10 shrink-0 place-items-center rounded-lg bg-neutral-100 text-neutral-700">
           <Icon className="size-5" aria-hidden />
@@ -62,7 +63,7 @@ function MaterialItem({ material: x }: { material: Material }) {
         <span className="flex shrink-0 items-center gap-1.5 text-sm font-semibold text-neutral-700 group-hover:text-neutral-900">
           {isFile ? (
             <>
-              <Download className="size-4" aria-hidden /> Download
+              <Eye className="size-4" aria-hidden /> Preview
             </>
           ) : (
             <>
@@ -71,6 +72,16 @@ function MaterialItem({ material: x }: { material: Material }) {
           )}
         </span>
       </a>
+      {x.downloadUrl && (
+        <a
+          href={x.downloadUrl}
+          aria-label={`Download ${x.title}`}
+          title="Download"
+          className="grid w-12 shrink-0 place-items-center rounded-xl border border-neutral-200 text-neutral-700 transition-colors hover:border-neutral-300 hover:bg-neutral-50 hover:text-neutral-900"
+        >
+          <Download className="size-5" aria-hidden />
+        </a>
+      )}
     </li>
   )
 }
