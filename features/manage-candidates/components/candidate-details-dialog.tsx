@@ -15,7 +15,10 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog"
 import { routes } from "@/config/routes"
-import { VerifiedBadge } from "@/features/manage-candidates/components/candidate-columns"
+import {
+  RequestBadge,
+  VerifiedBadge,
+} from "@/features/manage-candidates/components/candidate-columns"
 import type { Candidate } from "@/features/manage-candidates/services/candidates"
 import { formatDateTime, formatDay } from "@/lib/format"
 
@@ -30,6 +33,7 @@ export function CandidateDetailsDialog({ candidate: c, onClose }: Props) {
           <div className="flex flex-wrap items-center gap-2">
             <DialogTitle>{c.passportName}</DialogTitle>
             <VerifiedBadge verified={c.isVerified} />
+            <RequestBadge candidate={c} />
           </div>
           <DialogDescription className="font-mono">
             {c.certificateId}
@@ -40,11 +44,15 @@ export function CandidateDetailsDialog({ candidate: c, onClose }: Props) {
             <Item term="Certificate ID" mono>
               {c.certificateId}
             </Item>
-            <Item term="Certificate No">{c.certificateNo}</Item>
+            <Item term="Certificate No">
+              {c.certificateNo ?? "Not issued yet"}
+            </Item>
             <Item term="Assigned course" wide>
               {c.course.title}
             </Item>
-            <Item term="Issue date">{formatDay(c.issueDate)}</Item>
+            <Item term="Issue date">
+              {c.issueDate ? formatDay(c.issueDate) : "Not issued yet"}
+            </Item>
             <Item term="Verified">
               {c.verifiedAt ? formatDateTime(c.verifiedAt) : "Not yet"}
             </Item>

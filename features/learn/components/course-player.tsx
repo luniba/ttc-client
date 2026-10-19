@@ -103,7 +103,7 @@ function Shell({
           <span className="truncate">{c.title}</span>
         </Link>
         <Link
-          href={routes.contact(c.slug)}
+          href={routes.checkout(c.slug)}
           className={cn(buttonVariants({ size: "sm" }), "rounded-full")}
         >
           Enroll now

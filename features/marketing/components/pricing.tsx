@@ -50,7 +50,7 @@ export async function Pricing() {
             badges={["Globally recognised", "Best price"]}
             features={features(name)}
             enroll={{
-              href: routes.contact(slug),
+              href: routes.checkout(slug),
               label: "Enroll now",
             }}
             details={{

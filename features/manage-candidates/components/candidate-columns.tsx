@@ -30,7 +30,12 @@ export function useCandidateColumns({ onEdit, onDelete }: Actions) {
         id: "passportName",
         header: "Passport name",
         meta: { className: "min-w-44 font-medium text-foreground" },
-        cell: ({ row }) => row.original.passportName,
+        cell: ({ row }) => (
+          <span className="flex flex-wrap items-center gap-2">
+            {row.original.passportName}
+            <RequestBadge candidate={row.original} />
+          </span>
+        ),
       }),
       col.display({
         id: "course",
@@ -42,7 +47,8 @@ export function useCandidateColumns({ onEdit, onDelete }: Actions) {
         id: "issueDate",
         header: "Issue date",
         meta: { className: "whitespace-nowrap tabular-nums" },
-        cell: ({ row }) => formatDay(row.original.issueDate),
+        cell: ({ row }) =>
+          row.original.issueDate ? formatDay(row.original.issueDate) : "—",
       }),
       col.display({
         id: "isVerified",
@@ -68,6 +74,13 @@ export function VerifiedBadge({ verified }: { verified: boolean }) {
   )
 }
 
+// Someone who asked for a course on the website and has no certificate yet: the admin's to-do.
+export function RequestBadge({ candidate }: { candidate: Candidate }) {
+  return candidate.certificateNo ? null : (
+    <Badge variant="warning">Website request</Badge>
+  )
+}
+
 // The same essentials as a card, for phones; tapping it opens the details.
 export function CandidateCard({
   candidate: c,
@@ -80,12 +93,14 @@ export function CandidateCard({
         <p className="flex flex-wrap items-center gap-2 font-medium">
           {c.passportName}
           <VerifiedBadge verified={c.isVerified} />
+          <RequestBadge candidate={c} />
         </p>
         <p className="font-mono text-[13px] text-muted-foreground">
           {c.certificateId}
         </p>
         <p className="text-sm text-muted-foreground">
-          {c.course.title} · {formatDay(c.issueDate)}
+          {c.course.title} ·{" "}
+          {c.issueDate ? formatDay(c.issueDate) : "Not issued"}
         </p>
       </div>
       <RowActions

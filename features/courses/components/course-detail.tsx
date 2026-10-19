@@ -47,7 +47,7 @@ export function CourseDetail({ course }: { course: PublicCourseDetail }) {
           </div>
           <CourseSidebar
             course={course}
-            enrollHref={routes.contact(course.slug)}
+            enrollHref={routes.checkout(course.slug)}
             contactHref={routes.contact()}
             labels={{
               oneTime: "One-time payment",

@@ -19,6 +19,8 @@ export const routes = {
   certificate: () => `/certificate`,
   contact: (course?: string) =>
     `/contact` + (course ? `?${new URLSearchParams({ course })}` : ""),
+  checkout: (course?: string) =>
+    `/checkout` + (course ? `?${new URLSearchParams({ course })}` : ""),
   download: () => `/download-tesol-course`,
   privacy: () => `/privacy`,
   terms: () => `/terms`,

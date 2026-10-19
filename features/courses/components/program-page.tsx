@@ -110,7 +110,7 @@ async function ProgramBlocks() {
             image={image}
             reverse={i % 2 === 1}
             enroll={{
-              href: routes.contact(course.slug),
+              href: routes.checkout(course.slug),
               label: "Enroll now",
             }}
             details={{

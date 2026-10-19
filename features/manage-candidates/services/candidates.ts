@@ -10,14 +10,15 @@ import { email, requiredDate, requiredText } from "@/lib/validation"
 export type Candidate = {
   id: string
   certificateId: string
-  certificateNo: string
+  // Null for a request made on the website, until the admin issues the certificate.
+  certificateNo: string | null
   passportName: string
   passportNo: string
   dateOfBirth: string
   address: string
   email: string
   course: { id: string; title: string }
-  issueDate: string
+  issueDate: string | null
   nationality: string
   isVerified: boolean
   verifiedAt: string | null

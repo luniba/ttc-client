@@ -26,7 +26,7 @@ export function LockedView({ course }: { course: PublicCourseDetail }) {
       </div>
       <div className="flex flex-wrap justify-center gap-3">
         <Link
-          href={routes.contact(course.slug)}
+          href={routes.checkout(course.slug)}
           className={cn(buttonVariants({ size: "lg" }), "rounded-full")}
         >
           Enroll now
