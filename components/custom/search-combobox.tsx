@@ -2,6 +2,7 @@
 
 import { useState, type ReactNode } from "react"
 
+import { Badge } from "@/components/ui/badge"
 import {
   Combobox,
   ComboboxChip,
@@ -22,7 +23,14 @@ import {
 } from "@/components/ui/field"
 import { useDebouncedValue } from "@/hooks/use-debounced-value"
 
-export type Option = { value: string; label: string; hint?: string }
+export type Option = {
+  value: string
+  label: string
+  hint?: string
+  // A small status label shown beside the option; a disabled option is listed but can't be picked.
+  badge?: string
+  disabled?: boolean
+}
 
 // Looks up options for what was typed; the server does the filtering.
 export type OptionSearch<T extends Option> = (query: string) => {
@@ -135,7 +143,12 @@ function Results({
       <ComboboxEmpty>{loading ? "Searching…" : "No matches"}</ComboboxEmpty>
       <ComboboxList>
         {(o: Option) => (
-          <ComboboxItem key={o.value} value={o} className="py-2">
+          <ComboboxItem
+            key={o.value}
+            value={o}
+            disabled={o.disabled}
+            className="py-2"
+          >
             <span className="flex min-w-0 flex-col">
               <span className="truncate text-sm font-medium">{o.label}</span>
               {o.hint && (
@@ -144,6 +157,11 @@ function Results({
                 </span>
               )}
             </span>
+            {o.badge && (
+              <Badge variant="success" className="ml-auto shrink-0">
+                {o.badge}
+              </Badge>
+            )}
           </ComboboxItem>
         )}
       </ComboboxList>

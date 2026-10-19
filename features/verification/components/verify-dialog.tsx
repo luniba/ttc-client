@@ -11,20 +11,18 @@ import {
 } from "@/features/manage-candidates/services/candidates"
 import { getErrorKey } from "@/lib/axios"
 
-// Only unverified candidates are offered.
-function useUnverifiedSearch(q: string) {
-  const page = adminCandidates.usePage({
-    page: 1,
-    limit: 20,
-    q,
-    verified: "false",
-  })
+// Every candidate is listed so a search never comes back empty just because they are already verified;
+// those are marked and can't be picked.
+function useCandidateSearch(q: string) {
+  const page = adminCandidates.usePage({ page: 1, limit: 20, q })
   return {
     loading: page.isFetching,
     items: (page.data?.data ?? []).map((c): Option => ({
       value: c.id,
       label: c.passportName,
       hint: `${c.certificateId} · ${c.course.title}`,
+      badge: c.isVerified ? "Verified" : undefined,
+      disabled: c.isVerified,
     })),
   }
 }
@@ -39,7 +37,7 @@ export function VerifyDialog({ onClose }: { onClose: () => void }) {
       open
       onOpenChange={(open) => !open && onClose()}
       title="Verify candidate"
-      description="Search for an unverified candidate, then verify them."
+      description="Search for a candidate, then verify them. Already verified candidates are marked."
       submitLabel="Verify"
       cancelLabel="Cancel"
       pending={verify.isPending}
@@ -59,7 +57,7 @@ export function VerifyDialog({ onClose }: { onClose: () => void }) {
         id="candidate"
         label="Candidate"
         placeholder="Search by name, certificate ID or email"
-        useSearch={useUnverifiedSearch}
+        useSearch={useCandidateSearch}
         value={picked}
         onChange={(o) => {
           setPicked(o)
