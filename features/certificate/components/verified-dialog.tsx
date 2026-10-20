@@ -35,7 +35,7 @@ export function VerifiedDialog({ certificate: c, onClose }: Props) {
     ["Holder", c.holderName],
     ["Course", c.courseTitle],
     ["Issued", formatDay(c.issuedAt)],
-    ["Certificate ID", c.certificateId],
+    ["Certificate number", c.certificateNo],
   ]
 
   return (

@@ -8,22 +8,15 @@ import { requiredText } from "@/lib/validation"
 export const verifySchema = z.object({
   fullName: requiredText(160),
   passportNumber: requiredText(40),
-  // As printed: five letters, "tesoltefl", five digits. Case doesn't matter.
-  certificateId: z
-    .string()
-    .trim()
-    .toLowerCase()
-    .regex(
-      /^[a-z]{5}-tesoltefl-\d{5}$/,
-      "Use the format abcde-tesoltefl-12345"
-    ),
+  // Typed by an admin: no format to enforce.
+  certificateNo: requiredText(60),
 })
 
 export type VerifyForm = z.input<typeof verifySchema>
 export type VerifyPayload = z.output<typeof verifySchema>
 
 export type VerifiedCertificate = {
-  certificateId: string
+  certificateNo: string
   holderName: string
   courseTitle: string
   issuedAt: string

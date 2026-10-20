@@ -27,12 +27,12 @@ export function LoginForm({ next }: { next?: string }) {
 
   const onSubmit = form.handleSubmit((values) =>
     login.mutate(values, {
-      // Staff land in the admin panel; students have no area of their own yet.
+      // Staff go to the admin panel, students to their account.
       onSuccess: ({ user }) =>
         router.replace(
           safeRedirect(
             next,
-            user.role === "student" ? routes.home() : routes.admin()
+            user.role === "student" ? routes.account() : routes.admin()
           )
         ),
     })

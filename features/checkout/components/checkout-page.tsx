@@ -3,8 +3,7 @@ import { CheckoutForm } from "@/features/checkout/components/checkout-form"
 import { getCourses } from "@/features/courses/services/catalog"
 import { formatPrice } from "@/lib/format"
 
-// No payment here: the student sends their details and the council follows up. The course list comes from the API, so unlike
-// the contact page this one needs it (there is nothing to buy without a course).
+// No payment: the student sends details and the council follows up.
 export async function CheckoutPage({ course }: { course?: string }) {
   const courses = await getCourses()
   const items = courses.map((c) => ({ value: c.slug, label: c.title }))

@@ -12,7 +12,6 @@ import { today } from "@/features/manage-candidates/services/candidates"
 
 type Props = { courses: { value: string; label: string }[] }
 
-// The details the council needs to issue the certificate, entered by the student instead of by an admin.
 export function CheckoutFields({ courses }: Props) {
   const { register, control, formState } = useFormContext<CheckoutForm>()
   const { errors } = formState

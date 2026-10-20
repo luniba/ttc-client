@@ -81,3 +81,71 @@ export const toCandidateForm = (c?: Candidate): CandidateForm => ({
   issueDate: c?.issueDate ?? today(),
   nationality: c?.nationality ?? "",
 })
+
+// A candidate's student login. password is null once the student sets their own.
+export type CandidateLogin = {
+  hasAccount: boolean
+  username: string | null
+  password: string | null
+  passwordChangedByStudent: boolean
+  // Whether an admin granted access to the course.
+  enrolled: boolean
+}
+
+const loginKey = (id: string) => [...adminCandidates.key, id, "login"]
+
+export const useCandidateLogin = (id: string) =>
+  useQuery({
+    queryKey: loginKey(id),
+    queryFn: async () =>
+      (await api.get<{ data: CandidateLogin }>(`/admin/candidates/${id}/login`))
+        .data.data,
+    // Don't keep the password cached.
+    staleTime: 0,
+    gcTime: 0,
+  })
+
+// Omit the password to generate one.
+export const useSetLoginPassword = (id: string) => {
+  const qc = useQueryClient()
+  return useMutation({
+    mutationFn: async (password?: string) =>
+      (
+        await api.put<{ data: CandidateLogin }>(
+          `/admin/candidates/${id}/login/password`,
+          password ? { password } : {}
+        )
+      ).data.data,
+    onSuccess: (login) => qc.setQueryData(loginKey(id), login),
+  })
+}
+
+// Grant unlocks the course and emails the student; revoke locks it.
+export const useSetCourseAccess = (id: string) => {
+  const qc = useQueryClient()
+  return useMutation({
+    mutationFn: async (grant: boolean) =>
+      (
+        await api.request<{ data: CandidateLogin }>({
+          method: grant ? "POST" : "DELETE",
+          url: `/admin/candidates/${id}/access`,
+        })
+      ).data.data,
+    onSuccess: (login) => qc.setQueryData(loginKey(id), login),
+  })
+}
+
+// For a candidate with no login. The email is sent only when asked.
+export const useCreateLogin = (id: string) => {
+  const qc = useQueryClient()
+  return useMutation({
+    mutationFn: async (sendEmail: boolean) =>
+      (
+        await api.post<{ data: CandidateLogin }>(
+          `/admin/candidates/${id}/login`,
+          { sendEmail }
+        )
+      ).data.data,
+    onSuccess: (login) => qc.setQueryData(loginKey(id), login),
+  })
+}

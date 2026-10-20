@@ -57,6 +57,7 @@ const errorKeys: Partial<Record<string, string>> = {
   SLUG_TAKEN: "That slug is already taken. Try another one.",
   CATEGORY_TAKEN: "A category with this name already exists.",
   CERTIFICATE_NO_TAKEN: "This certificate number is already recorded.",
+  USERNAME_TAKEN: "That username is already taken. Try another one.",
   UNSUPPORTED_MEDIA_TYPE: "This file type isn't allowed.",
   PAYLOAD_TOO_LARGE: "This file is too large.",
   FORBIDDEN: "Your role can't do this.",

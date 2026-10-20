@@ -20,8 +20,7 @@ RUN pnpm build
 FROM node:24-alpine AS runner
 WORKDIR /app
 ENV NODE_ENV=production
-# The server fetches courses from the API at runtime (features/courses/services/catalog.ts), so API_URL and
-# NEXT_PUBLIC_SITE_URL must exist in this stage too, not only in the builder.
+# The server fetches from the API at runtime, so these are needed here too.
 ARG API_URL
 ARG NEXT_PUBLIC_SITE_URL
 ENV API_URL=$API_URL NEXT_PUBLIC_SITE_URL=$NEXT_PUBLIC_SITE_URL

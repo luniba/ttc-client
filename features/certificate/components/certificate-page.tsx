@@ -28,7 +28,7 @@ export function CertificatePage() {
             </h2>
             <dl className="flex flex-col gap-6">
               <Step title="Enter the details">
-                The holder&apos;s name, passport number and certificate ID,
+                The holder&apos;s name, passport number and certificate number,
                 exactly as printed.
               </Step>
               <Step title="We check our register">

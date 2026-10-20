@@ -43,7 +43,11 @@ export function CandidateEditor({ candidate }: { candidate?: Candidate }) {
               ? "Candidate updated"
               : `Candidate added: ${saved.certificateId}`
           )
-          router.push(routes.admin("candidates"))
+          router.push(
+            candidate
+              ? routes.adminCandidate(candidate.id)
+              : routes.admin("candidates")
+          )
         },
         onError: (e) =>
           getErrorCode(e) === "CERTIFICATE_NO_TAKEN"
@@ -60,7 +64,7 @@ export function CandidateEditor({ candidate }: { candidate?: Candidate }) {
   return (
     <div className="mx-auto flex w-full max-w-3xl flex-col gap-8">
       <div className="flex flex-col gap-3">
-        <BackLink href={routes.admin("candidates")}>All candidates</BackLink>
+        <EditorBackLink candidateId={candidate?.id} />
         <h2 className="text-xl font-semibold">
           {candidate ? candidate.passportName : "Add candidate"}
         </h2>
@@ -109,4 +113,15 @@ function useCourseItems(candidate?: Candidate) {
   if (candidate && !items.some((i) => i.value === candidate.course.id))
     items.push({ value: candidate.course.id, label: candidate.course.title })
   return items
+}
+
+// Editing returns to the candidate's page; adding to the list.
+function EditorBackLink({ candidateId }: { candidateId?: string }) {
+  return candidateId ? (
+    <BackLink href={routes.adminCandidate(candidateId)}>
+      Back to candidate
+    </BackLink>
+  ) : (
+    <BackLink href={routes.admin("candidates")}>All candidates</BackLink>
+  )
 }

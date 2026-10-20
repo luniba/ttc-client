@@ -11,8 +11,7 @@ import {
 } from "@/features/manage-candidates/services/candidates"
 import { getErrorKey } from "@/lib/axios"
 
-// Every candidate is listed so a search never comes back empty just because they are already verified;
-// those are marked and can't be picked.
+// Lists everyone; verified candidates are marked and can't be picked.
 function useCandidateSearch(q: string) {
   const page = adminCandidates.usePage({ page: 1, limit: 20, q })
   return {

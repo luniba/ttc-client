@@ -19,6 +19,7 @@ export function CheckoutSuccess() {
       </h2>
       <p className="max-w-md text-base text-muted-foreground">
         We have notified our team and they will contact you very soon.
+        We&apos;ve also emailed you a confirmation with your login details.
       </p>
       <p className="max-w-md text-base text-muted-foreground">
         If it&apos;s urgent, you can reach us{" "}

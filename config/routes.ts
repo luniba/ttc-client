@@ -19,6 +19,9 @@ export const routes = {
   certificate: () => `/certificate`,
   contact: (course?: string) =>
     `/contact` + (course ? `?${new URLSearchParams({ course })}` : ""),
+  account: () => `/account`,
+  accountProfile: () => `/account/profile`,
+  accountSettings: () => `/account/settings`,
   checkout: (course?: string) =>
     `/checkout` + (course ? `?${new URLSearchParams({ course })}` : ""),
   download: () => `/download-tesol-course`,
@@ -31,6 +34,7 @@ export const routes = {
     `/admin/courses/${courseId}/modules/${moduleId}`,
   newCandidate: () => "/admin/candidates/new",
   adminCandidate: (id: string) => `/admin/candidates/${id}`,
+  editCandidate: (id: string) => `/admin/candidates/${id}/edit`,
   newOrder: () => "/admin/orders/new",
   adminOrder: (id: string) => `/admin/orders/${id}`,
   login: (next?: string) =>

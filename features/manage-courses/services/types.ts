@@ -48,7 +48,7 @@ export type Material = {
   fileName: string | null
   mimeType: string | null
   sizeBytes: number | null
-  // file: opens in the browser (a PDF shows in the viewer); link: the external address.
+  // file: opens in the browser; link: the external address.
   url: string
   // file: saves it; null for links.
   downloadUrl: string | null

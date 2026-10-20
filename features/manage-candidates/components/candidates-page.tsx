@@ -3,13 +3,12 @@
 import { Add, Profile2User } from "iconsax-reactjs"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
-import { useCallback, useState } from "react"
+import { useCallback } from "react"
 
 import { PageIntro } from "@/components/custom/page-intro"
 import { ResourceTable } from "@/components/custom/resource-table"
 import { buttonVariants } from "@/components/ui/button"
 import { routes } from "@/config/routes"
-import { CandidateDetailsDialog } from "@/features/manage-candidates/components/candidate-details-dialog"
 import {
   CandidateCard,
   useCandidateColumns,
@@ -22,13 +21,12 @@ import { useDeleteConfirm } from "@/hooks/use-delete-confirm"
 import { useTableLabels } from "@/hooks/use-table-labels"
 import { useTableState } from "@/hooks/use-table-state"
 
-// Adding and editing open their own pages; clicking a row shows all its details.
+// Add, edit and details each have their own page.
 export function CandidatesPage() {
   const router = useRouter()
   const table = useTableState()
   const page = adminCandidates.usePage(table.params)
   const labels = useTableLabels()
-  const [viewing, setViewing] = useState<Candidate>()
   const del = useDeleteConfirm<Candidate>({
     remove: adminCandidates.useRemove(),
     title: "Delete this candidate?",
@@ -39,7 +37,7 @@ export function CandidatesPage() {
   })
   const actions = {
     onEdit: useCallback(
-      (c: Candidate) => router.push(routes.adminCandidate(c.id)),
+      (c: Candidate) => router.push(routes.editCandidate(c.id)),
       [router]
     ),
     onDelete: del.ask,
@@ -63,7 +61,7 @@ export function CandidatesPage() {
         state={table}
         columns={columns}
         rowId={(c) => c.id}
-        onRowClick={setViewing}
+        onRowClick={(c) => router.push(routes.adminCandidate(c.id))}
         mobile={(c) => <CandidateCard candidate={c} {...actions} />}
         labels={labels}
         label="Candidates"
@@ -77,12 +75,6 @@ export function CandidatesPage() {
           action: add,
         }}
       />
-      {viewing && (
-        <CandidateDetailsDialog
-          candidate={viewing}
-          onClose={() => setViewing(undefined)}
-        />
-      )}
       {del.dialog}
     </div>
   )

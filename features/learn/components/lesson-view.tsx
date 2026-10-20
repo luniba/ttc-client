@@ -35,7 +35,7 @@ export function LessonView({ module: m }: { module: CourseModule }) {
   )
 }
 
-// A file opens in the browser first (a PDF shows in the viewer); saving it is a separate button. A link just opens.
+// Files preview in the browser; download is a separate button.
 function MaterialItem({ material: x }: { material: Material }) {
   const isFile = x.type === "file"
   const Icon = isFile ? FileText : Link2

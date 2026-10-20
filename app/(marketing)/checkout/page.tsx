@@ -10,11 +10,11 @@ export const metadata: Metadata = {
     description:
       "Request a TESOL or TEFL course. Send your details and our team will contact you to complete your enrolment.",
   }),
-  // A form, not content: nothing here to put in search results.
+  // A form, not content.
   robots: { index: false, follow: true },
 }
 
-// Reads the course list at request time and the API may be down at build, so it is never prerendered (same as /courses).
+// Dynamic: needs the API at request time.
 export const dynamic = "force-dynamic"
 
 export default async function Page({ searchParams }: PageProps<"/checkout">) {

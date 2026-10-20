@@ -1,12 +1,12 @@
 import type { Metadata } from "next"
 
-import { EditCandidatePage } from "@/features/manage-candidates/components/edit-candidate-page"
+import { CandidateDetailsPage } from "@/features/manage-candidates/components/candidate-details-page"
 
-export const metadata: Metadata = { title: "Edit candidate" }
+export const metadata: Metadata = { title: "Candidate" }
 
 export default async function Page({
   params,
 }: PageProps<"/admin/candidates/[id]">) {
   const { id } = await params
-  return <EditCandidatePage id={id} />
+  return <CandidateDetailsPage id={id} />
 }

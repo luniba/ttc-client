@@ -10,6 +10,8 @@ export type Role = "admin" | "instructor" | "student"
 export type User = {
   id: string
   email: string
+  // The username if set, otherwise the email.
+  username: string
   name: string
   role: Role
   emailVerified: boolean

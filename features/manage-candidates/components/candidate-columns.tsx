@@ -13,7 +13,7 @@ type Actions = {
   onDelete: (c: Candidate) => void
 }
 
-// The essentials only; clicking a row opens every field in CandidateDetailsDialog.
+// Clicking a row opens the candidate's page.
 export function useCandidateColumns({ onEdit, onDelete }: Actions) {
   return useMemo(() => {
     const col = listColumns<Candidate>()
@@ -74,7 +74,7 @@ export function VerifiedBadge({ verified }: { verified: boolean }) {
   )
 }
 
-// Someone who asked for a course on the website and has no certificate yet: the admin's to-do.
+// A website request without a certificate yet.
 export function RequestBadge({ candidate }: { candidate: Candidate }) {
   return candidate.certificateNo ? null : (
     <Badge variant="warning">Website request</Badge>

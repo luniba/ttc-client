@@ -6,7 +6,7 @@ import { today } from "@/features/manage-candidates/services/candidates"
 import { api, getErrorKey } from "@/lib/axios"
 import { email, requiredDate, requiredText } from "@/lib/validation"
 
-// The candidate form without what only the council knows (certificate number, issue date); the course is chosen by slug.
+// The candidate form minus certificate number and issue date.
 export const checkoutSchema = z.object({
   courseSlug: z.string().min(1, "Choose a course"),
   passportName: requiredText(160),

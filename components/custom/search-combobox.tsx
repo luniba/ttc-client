@@ -27,7 +27,7 @@ export type Option = {
   value: string
   label: string
   hint?: string
-  // A small status label shown beside the option; a disabled option is listed but can't be picked.
+  // A status label; a disabled option is listed but can't be picked.
   badge?: string
   disabled?: boolean
 }

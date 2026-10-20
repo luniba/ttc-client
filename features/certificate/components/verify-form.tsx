@@ -19,7 +19,7 @@ export function VerifyForm() {
   const verify = useVerifyCertificate()
   const form = useForm<Values, unknown, VerifyPayload>({
     resolver: zodResolver(verifySchema),
-    defaultValues: { fullName: "", passportNumber: "", certificateId: "" },
+    defaultValues: { fullName: "", passportNumber: "", certificateNo: "" },
   })
   const { errors } = form.formState
   // null: checked and nothing matched; undefined: not checked yet.
@@ -51,13 +51,12 @@ export function VerifyForm() {
           {...form.register("passportNumber")}
         />
         <InputField
-          id="certificateId"
+          id="certificateNo"
           autoComplete="off"
-          label="Certificate ID"
-          placeholder="abcde-tesoltefl-12345"
-          description="For example kuqwc-tesoltefl-35620"
-          error={errors.certificateId?.message}
-          {...form.register("certificateId")}
+          label="Certificate number"
+          placeholder="As printed on the certificate"
+          error={errors.certificateNo?.message}
+          {...form.register("certificateNo")}
         />
         {notFound && <NotFoundNote />}
         <LoadingButton
@@ -93,7 +92,7 @@ function NotFoundNote() {
       <p>
         <span className="font-semibold">No verified certificate matches.</span>{" "}
         <span className="text-muted-foreground">
-          Check that the name, passport number and certificate ID match the
+          Check that the name, passport number and certificate number match the
           certificate exactly. If you still can&apos;t find it, contact us.
         </span>
       </p>
