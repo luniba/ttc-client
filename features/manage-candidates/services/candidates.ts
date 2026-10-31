@@ -88,8 +88,6 @@ export type CandidateLogin = {
   username: string | null
   password: string | null
   passwordChangedByStudent: boolean
-  // Whether an admin granted access to the course.
-  enrolled: boolean
 }
 
 const loginKey = (id: string) => [...adminCandidates.key, id, "login"]
@@ -120,18 +118,51 @@ export const useSetLoginPassword = (id: string) => {
   })
 }
 
+// The course they requested, the courses on their orders, and anything their login can open.
+export type CandidateCourse = {
+  id: string
+  title: string
+  granted: boolean
+  grantedAt: string | null
+}
+export type CandidateCourses = {
+  hasAccount: boolean
+  courses: CandidateCourse[]
+}
+
+const coursesKey = (id: string) => [...adminCandidates.key, id, "courses"]
+
+export const useCandidateCourses = (id: string) =>
+  useQuery({
+    queryKey: coursesKey(id),
+    queryFn: async () =>
+      (
+        await api.get<{ data: CandidateCourses }>(
+          `/admin/candidates/${id}/courses`
+        )
+      ).data.data,
+    // Orders and the login tab change it too; refetch whenever the tab opens.
+    staleTime: 0,
+  })
+
 // Grant unlocks the course and emails the student; revoke locks it.
 export const useSetCourseAccess = (id: string) => {
   const qc = useQueryClient()
   return useMutation({
-    mutationFn: async (grant: boolean) =>
+    mutationFn: async ({
+      courseId,
+      grant,
+    }: {
+      courseId: string
+      grant: boolean
+    }) =>
       (
-        await api.request<{ data: CandidateLogin }>({
+        await api.request<{ data: CandidateCourses }>({
           method: grant ? "POST" : "DELETE",
-          url: `/admin/candidates/${id}/access`,
+          url: `/admin/candidates/${id}/courses/${courseId}/access`,
         })
       ).data.data,
-    onSuccess: (login) => qc.setQueryData(loginKey(id), login),
+    onSuccess: (courses) => qc.setQueryData(coursesKey(id), courses),
   })
 }
 

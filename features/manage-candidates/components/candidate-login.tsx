@@ -10,12 +10,10 @@ import {
   Group,
   Item,
 } from "@/features/manage-candidates/components/candidate-detail-parts"
-import { Badge } from "@/components/ui/badge"
 import { Checkbox } from "@/components/ui/checkbox"
 import {
   useCandidateLogin,
   useCreateLogin,
-  useSetCourseAccess,
 } from "@/features/manage-candidates/services/candidates"
 import { getErrorKey } from "@/lib/axios"
 
@@ -78,7 +76,6 @@ export function CandidateLoginGroup({ candidateId }: { candidateId: string }) {
               </span>
             )}
           </Item>
-          <CourseAccess candidateId={candidateId} enrolled={l.enrolled} />
           <div className="sm:col-span-2">
             <Button
               type="button"
@@ -110,8 +107,8 @@ function CreateLogin({ candidateId }: { candidateId: string }) {
     <Item term="Status" wide>
       <span className="flex flex-col items-start gap-3">
         <span className="text-muted-foreground">
-          No login yet. Create one to give this student access to their course.
-          It uses the email on this record.
+          No login yet. Create one so this student can sign in, then grant their
+          courses on the Courses tab. It uses the email on this record.
         </span>
         <label className="flex cursor-pointer items-center gap-2 font-normal">
           <Checkbox
@@ -138,45 +135,6 @@ function CreateLogin({ candidateId }: { candidateId: string }) {
           }
         >
           Create login
-        </Button>
-      </span>
-    </Item>
-  )
-}
-
-// Course access is separate from the login.
-function CourseAccess({
-  candidateId,
-  enrolled,
-}: {
-  candidateId: string
-  enrolled: boolean
-}) {
-  const access = useSetCourseAccess(candidateId)
-  return (
-    <Item term="Course access" wide>
-      <span className="flex flex-wrap items-center gap-3">
-        <Badge variant={enrolled ? "success" : "gray"}>
-          {enrolled ? "Granted" : "Not granted"}
-        </Badge>
-        <Button
-          type="button"
-          size="sm"
-          variant={enrolled ? "outline" : "primary"}
-          disabled={access.isPending}
-          onClick={() =>
-            access.mutate(!enrolled, {
-              onSuccess: () =>
-                toast.success(
-                  enrolled
-                    ? "Access removed"
-                    : "Access granted. The student has been emailed."
-                ),
-              onError: (err) => toast.error(getErrorKey(err)),
-            })
-          }
-        >
-          {enrolled ? "Revoke access" : "Grant access"}
         </Button>
       </span>
     </Item>

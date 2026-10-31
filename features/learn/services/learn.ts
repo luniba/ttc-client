@@ -1,5 +1,6 @@
 import { useMutation, useQuery } from "@tanstack/react-query"
 
+import { useAuth } from "@/features/auth/services/me"
 import type { PublicCourseDetail } from "@/features/courses/services/catalog"
 import type { CourseModule } from "@/features/manage-courses/services/types"
 import { api, getErrorCode } from "@/lib/axios"
@@ -19,9 +20,13 @@ export const usePublicCourse = (slug: string) =>
 export type ModuleState =
   { kind: "open"; module: CourseModule } | { kind: "locked" }
 
-export const useCourseModule = (slug: string, moduleId: string) =>
-  useQuery({
-    queryKey: ["courses", slug, "modules", moduleId],
+export const useCourseModule = (slug: string, moduleId: string) => {
+  const { user, status } = useAuth()
+  return useQuery({
+    // Per viewer, and only once the session is known: on a fresh load the call would otherwise
+    // go out before the token is restored and an enrolled student would get "locked".
+    queryKey: ["courses", slug, "modules", moduleId, user?.id ?? null],
+    enabled: status !== "unknown",
     queryFn: async (): Promise<ModuleState> => {
       try {
         const res = await api.get<{ data: CourseModule }>(
@@ -37,6 +42,7 @@ export const useCourseModule = (slug: string, moduleId: string) =>
     staleTime: 5 * 60_000,
     retry: (count, e) => getErrorCode(e) !== "NOT_FOUND" && count < 2,
   })
+}
 
 export type QuizResult = { score: number; total: number; results: boolean[] }
 

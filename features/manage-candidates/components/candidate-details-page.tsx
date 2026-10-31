@@ -10,6 +10,7 @@ import {
   RequestBadge,
   VerifiedBadge,
 } from "@/features/manage-candidates/components/candidate-columns"
+import { CandidateCoursesGroup } from "@/features/manage-candidates/components/candidate-courses"
 import { CandidateLoginGroup } from "@/features/manage-candidates/components/candidate-login"
 import {
   CertificatePanel,
@@ -66,6 +67,11 @@ export function CandidateDetailsPage({ id }: { id: string }) {
                 <PersonPanel candidate={c} />
               </div>
             ),
+          },
+          {
+            id: "courses",
+            label: "Courses",
+            panel: <CandidateCoursesGroup candidateId={c.id} />,
           },
           {
             id: "login",
