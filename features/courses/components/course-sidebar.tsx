@@ -1,13 +1,18 @@
+"use client"
+
 import { cn } from "cn"
 import Link from "next/link"
 
+import { Badge } from "@/components/ui/badge"
 import { buttonVariants } from "@/components/ui/button"
+import { routes } from "@/config/routes"
+import { useCourseStatus } from "@/features/account/services/account"
 import { CourseThumb } from "@/features/courses/components/course-thumb"
-import type { PublicCourse } from "@/features/courses/services/catalog"
+import type { PublicCourseDetail } from "@/features/courses/services/catalog"
 import { formatPrice } from "@/lib/format"
 
 type Props = {
-  course: PublicCourse
+  course: PublicCourseDetail
   labels: {
     oneTime: string
     enroll: string
@@ -25,6 +30,9 @@ export function CourseSidebar({
   enrollHref,
   contactHref,
 }: Props) {
+  // Visitors get Enroll now (what the server renders); a signed-in student sees their status.
+  const status = useCourseStatus(course.slug)
+  const first = course.modules[0]
   return (
     <aside className="flex flex-col overflow-hidden rounded-2xl border border-neutral-200 bg-card shadow-xs lg:sticky lg:top-24">
       <CourseThumb src={course.thumbnailUrl} />
@@ -37,12 +45,32 @@ export function CourseSidebar({
             {labels.oneTime}
           </span>
         </p>
-        <Link
-          href={enrollHref}
-          className={cn(buttonVariants({ size: "xl" }), "rounded-full")}
-        >
-          {labels.enroll}
-        </Link>
+        {status === "enrolled" ? (
+          <Link
+            href={
+              first
+                ? routes.courseModule(course.slug, first.id)
+                : routes.account()
+            }
+            className={cn(buttonVariants({ size: "xl" }), "rounded-full")}
+          >
+            Start learning
+          </Link>
+        ) : status === "requested" ? (
+          <div className="flex flex-col gap-2">
+            <Badge variant="warning">Request received</Badge>
+            <p className="text-sm text-muted-foreground">
+              Our team will contact you very soon to complete your enrolment.
+            </p>
+          </div>
+        ) : (
+          <Link
+            href={enrollHref}
+            className={cn(buttonVariants({ size: "xl" }), "rounded-full")}
+          >
+            {labels.enroll}
+          </Link>
+        )}
         <dl className="flex flex-col divide-y divide-neutral-200 text-sm">
           {labels.rows.map(([term, value]) => (
             <div key={term} className="flex justify-between gap-4 py-3">

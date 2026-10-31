@@ -1,8 +1,9 @@
 import { cn } from "cn"
-import { BookOpen, ListChecks, Lock } from "lucide-react"
+import { BookOpen, ListChecks } from "lucide-react"
 import Link from "next/link"
 
 import { routes } from "@/config/routes"
+import { ModuleLock } from "@/features/courses/components/module-lock"
 import type { ModuleSummary } from "@/features/manage-courses/services/types"
 
 type Props = { slug: string; modules: ModuleSummary[]; currentId: string }
@@ -48,12 +49,12 @@ export function ModuleSidebar({ slug, modules, currentId }: Props) {
                   </span>
                 </span>
                 {!m.isPreview && (
-                  <Lock
+                  <ModuleLock
+                    slug={slug}
                     className={cn(
                       "mt-1 size-3.5 shrink-0",
                       current ? "text-white/70" : "text-neutral-400"
                     )}
-                    aria-label="Locked"
                   />
                 )}
               </Link>

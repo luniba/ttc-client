@@ -8,9 +8,11 @@ import type { ReactNode } from "react"
 import { ListError } from "@/components/custom/list-error"
 import { Logo } from "@/components/common/logo"
 import { buttonVariants } from "@/components/ui/button"
+import { Badge } from "@/components/ui/badge"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { routes } from "@/config/routes"
 import { siteConfig } from "@/config/site"
+import { useCourseStatus } from "@/features/account/services/account"
 import type { PublicCourseDetail } from "@/features/courses/services/catalog"
 import { ModuleContent } from "@/features/learn/components/module-content"
 import { ModuleSidebar } from "@/features/learn/components/module-sidebar"
@@ -88,6 +90,7 @@ function Shell({
   course: PublicCourseDetail
   children: ReactNode
 }) {
+  const status = useCourseStatus(c.slug)
   return (
     <div className="flex min-h-dvh flex-col bg-white text-foreground lg:h-dvh">
       <header className="flex h-16 shrink-0 items-center gap-4 border-b border-neutral-200 px-4 lg:px-6">
@@ -102,12 +105,18 @@ function Shell({
           <ChevronLeft className="size-4 shrink-0" aria-hidden />
           <span className="truncate">{c.title}</span>
         </Link>
-        <Link
-          href={routes.checkout(c.slug)}
-          className={cn(buttonVariants({ size: "sm" }), "rounded-full")}
-        >
-          Enroll now
-        </Link>
+        {status === "requested" ? (
+          <Badge variant="warning">Request received</Badge>
+        ) : (
+          status !== "enrolled" && (
+            <Link
+              href={routes.checkout(c.slug)}
+              className={cn(buttonVariants({ size: "sm" }), "rounded-full")}
+            >
+              Enroll now
+            </Link>
+          )
+        )}
       </header>
       <div className="grid flex-1 lg:min-h-0 lg:grid-cols-[340px_minmax(0,1fr)]">
         {children}

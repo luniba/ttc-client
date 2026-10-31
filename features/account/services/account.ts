@@ -7,7 +7,7 @@ import {
 import toast from "react-hot-toast"
 import { z } from "zod"
 
-import { meQuery, type User } from "@/features/auth/services/me"
+import { meQuery, useAuth, type User } from "@/features/auth/services/me"
 import { api, getErrorCode, getErrorKey } from "@/lib/axios"
 
 // GET /me/account: the student's profile, courses and certificates.
@@ -41,6 +41,16 @@ export const accountQuery = queryOptions({
 })
 
 export const useAccount = () => useQuery(accountQuery)
+
+// The signed-in student's status for one course; null when signed out, staff, or not requested.
+export const useCourseStatus = (slug: string) => {
+  const { user } = useAuth()
+  const { data } = useQuery({
+    ...accountQuery,
+    enabled: user?.role === "student",
+  })
+  return data?.courses.find((c) => c.slug === slug)?.status ?? null
+}
 
 // Mirrors the API: 3-30 characters, no "@".
 export const usernameSchema = z.object({

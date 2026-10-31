@@ -1,10 +1,11 @@
-import { ChevronLeft, Eye, ListChecks, Lock } from "lucide-react"
+import { ChevronLeft, Eye, ListChecks } from "lucide-react"
 import Link from "next/link"
 
 import { Container } from "@/components/common/container"
 import { Badge } from "@/components/ui/badge"
 import { routes } from "@/config/routes"
 import { CourseSidebar } from "@/features/courses/components/course-sidebar"
+import { ModuleLock } from "@/features/courses/components/module-lock"
 import {
   paragraphs,
   type PublicCourseDetail,
@@ -138,9 +139,9 @@ function Curriculum({
                   )
                 )}
                 {!m.isPreview && (
-                  <Lock
+                  <ModuleLock
+                    slug={slug}
                     className="size-4 shrink-0 text-muted-foreground"
-                    aria-label="Locked"
                   />
                 )}
               </Link>
