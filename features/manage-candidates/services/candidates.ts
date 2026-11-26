@@ -180,3 +180,87 @@ export const useCreateLogin = (id: string) => {
     onSuccess: (login) => qc.setQueryData(loginKey(id), login),
   })
 }
+
+// Generated PDFs: the certificate and the transcript, each in a digital (cream, for screens and
+// email) and a print (white, for paper) version. Built from the record on every download.
+export type CertificateDocument = "certificate" | "transcript"
+export type CertificateVariant = "digital" | "print"
+
+// The API has templates for TEFL courses only (the transcript lists the TEFL modules).
+export const hasCertificateTemplate = (courseTitle: string) =>
+  /\bTEFL\b/i.test(courseTitle)
+
+// Fetches through the API client (it carries the access token). The API builds the PDF from the
+// record each time.
+async function fetchCertificateDocument(
+  id: string,
+  document: CertificateDocument,
+  variant: CertificateVariant
+) {
+  const res = await api.get<Blob>(
+    `/admin/candidates/${id}/documents/${document}/${variant}`,
+    { responseType: "blob" }
+  )
+  return toPdfFile(res, `${document}-${variant}.pdf`)
+}
+
+// A PDF response as a typed Blob plus the filename the API chose.
+export function toPdfFile(
+  res: { data: Blob; headers: Record<string, unknown> },
+  fallbackName: string
+) {
+  const header = String(res.headers["content-disposition"] ?? "")
+  return {
+    blob: new Blob([res.data], { type: "application/pdf" }),
+    filename: /filename="([^"]+)"/.exec(header)?.[1] ?? fallbackName,
+  }
+}
+
+export const useDownloadCertificateDocument = (id: string) =>
+  useMutation({
+    mutationFn: async ({
+      document,
+      variant,
+    }: {
+      document: CertificateDocument
+      variant: CertificateVariant
+    }) => {
+      const { blob, filename } = await fetchCertificateDocument(
+        id,
+        document,
+        variant
+      )
+      saveBlob(blob, filename)
+    },
+  })
+
+// For viewing in the portal: the PDF plus an object URL to show it. Under the candidate's key, so
+// editing the record refetches it; not kept once the viewer closes. The viewer revokes the URL.
+export const useCertificateDocument = (
+  id: string,
+  document: CertificateDocument,
+  variant: CertificateVariant,
+  enabled: boolean
+) =>
+  useQuery({
+    queryKey: [...adminCandidates.key, id, "documents", document, variant],
+    queryFn: async () => {
+      const file = await fetchCertificateDocument(id, document, variant)
+      return { ...file, url: URL.createObjectURL(file.blob) }
+    },
+    enabled,
+    gcTime: 0,
+  })
+
+export function saveBlob(blob: Blob, filename: string) {
+  const url = URL.createObjectURL(blob)
+  const link = Object.assign(window.document.createElement("a"), {
+    href: url,
+    download: filename,
+  })
+  window.document.body.append(link)
+  link.click()
+  link.remove()
+  // Give the browser a moment to start the download before the URL goes away.
+  setTimeout(() => URL.revokeObjectURL(url), 10_000)
+}
