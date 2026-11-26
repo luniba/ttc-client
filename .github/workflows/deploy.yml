@@ -40,7 +40,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: appleboy/scp-action@v0.1.7
+      # The server throttles SSH under bot traffic (MaxStartups) and drops new connections for a
+      # minute or two, so each SSH step gets one retry after a pause.
+      - id: copy
+        continue-on-error: true
+        uses: appleboy/scp-action@v0.1.7
         with:
           host: ${{ secrets.CONTABO_HOST }}
           username: ${{ secrets.CONTABO_USER }}
@@ -48,15 +52,45 @@ jobs:
           port: ${{ secrets.CONTABO_PORT || 22 }}
           source: "docker-compose.yml"
           target: "/var/www/ttc/ttc-client"
-      - uses: appleboy/ssh-action@v1
+      - if: steps.copy.outcome == 'failure'
+        run: sleep 30
+      - if: steps.copy.outcome == 'failure'
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.CONTABO_HOST }}
+          username: ${{ secrets.CONTABO_USER }}
+          key: ${{ secrets.CONTABO_SSH_KEY }}
+          port: ${{ secrets.CONTABO_PORT || 22 }}
+          source: "docker-compose.yml"
+          target: "/var/www/ttc/ttc-client"
+      - id: release
+        continue-on-error: true
+        uses: appleboy/ssh-action@v1
         with:
           host: ${{ secrets.CONTABO_HOST }}
           username: ${{ secrets.CONTABO_USER }}
           key: ${{ secrets.CONTABO_SSH_KEY }}
           port: ${{ secrets.CONTABO_PORT || 22 }}
           script: |
+            set -eu
             cd /var/www/ttc/ttc-client
             echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
             docker compose pull
-            docker compose up -d
+            docker compose up -d --force-recreate
+            docker image prune -f
+      - if: steps.release.outcome == 'failure'
+        run: sleep 30
+      - if: steps.release.outcome == 'failure'
+        uses: appleboy/ssh-action@v1
+        with:
+          host: ${{ secrets.CONTABO_HOST }}
+          username: ${{ secrets.CONTABO_USER }}
+          key: ${{ secrets.CONTABO_SSH_KEY }}
+          port: ${{ secrets.CONTABO_PORT || 22 }}
+          script: |
+            set -eu
+            cd /var/www/ttc/ttc-client
+            echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+            docker compose pull
+            docker compose up -d --force-recreate
             docker image prune -f
