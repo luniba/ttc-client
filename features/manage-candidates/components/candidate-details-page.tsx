@@ -11,6 +11,7 @@ import {
   VerifiedBadge,
 } from "@/features/manage-candidates/components/candidate-columns"
 import { CandidateCoursesGroup } from "@/features/manage-candidates/components/candidate-courses"
+import { CertificateDocumentsPanel } from "@/features/manage-candidates/components/candidate-documents"
 import { CandidateLoginGroup } from "@/features/manage-candidates/components/candidate-login"
 import {
   CertificatePanel,
@@ -19,7 +20,7 @@ import {
 import { CandidateTabs } from "@/features/manage-candidates/components/candidate-tabs"
 import { useCandidate } from "@/features/manage-candidates/services/candidates"
 
-// One candidate's page, in two tabs: details and student login.
+// One candidate's page, in two tabs: details (with the certificate PDFs) and student login.
 export function CandidateDetailsPage({ id }: { id: string }) {
   const candidate = useCandidate(id)
   if (candidate.isError)
@@ -64,6 +65,7 @@ export function CandidateDetailsPage({ id }: { id: string }) {
             panel: (
               <div className="flex flex-col gap-6">
                 <CertificatePanel candidate={c} />
+                <CertificateDocumentsPanel candidate={c} />
                 <PersonPanel candidate={c} />
               </div>
             ),

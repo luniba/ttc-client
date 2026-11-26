@@ -1,4 +1,5 @@
 import {
+  Award,
   Book1,
   Element3,
   Profile2User,
@@ -17,6 +18,7 @@ export const mainNav: NavItem[] = [
   { label: "Home", icon: Element3 },
   { area: "courses", label: "Courses", icon: Book1 },
   { area: "candidates", label: "Candidates", icon: Profile2User },
+  { area: "certificates", label: "Generate certificates", icon: Award },
   { area: "orders", label: "Orders", icon: Receipt2 },
   { area: "verification", label: "Verification", icon: ShieldTick },
 ]

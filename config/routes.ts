@@ -2,6 +2,7 @@
 export const appAreas = [
   "courses",
   "candidates",
+  "certificates",
   "orders",
   "verification",
   "settings",
