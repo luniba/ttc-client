@@ -186,9 +186,9 @@ export const useCreateLogin = (id: string) => {
 export type CertificateDocument = "certificate" | "transcript"
 export type CertificateVariant = "digital" | "print"
 
-// The API has templates for TEFL courses only (the transcript lists the TEFL modules).
+// The API has templates for TEFL and TESOL courses.
 export const hasCertificateTemplate = (courseTitle: string) =>
-  /\bTEFL\b/i.test(courseTitle)
+  /\b(TEFL|TESOL)\b/i.test(courseTitle)
 
 // Fetches through the API client (it carries the access token). The API builds the PDF from the
 // record each time.
