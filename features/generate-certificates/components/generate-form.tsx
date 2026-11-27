@@ -95,8 +95,8 @@ function CourseField({ courses }: { courses: Item[] }) {
           onBlur={field.onBlur}
           description={
             courses.length
-              ? "TEFL courses only for now."
-              : "No TEFL course found. Add one under Courses first."
+              ? "TEFL and TESOL courses."
+              : "No TEFL or TESOL course found. Add one under Courses first."
           }
           error={formState.errors.courseId?.message}
         />

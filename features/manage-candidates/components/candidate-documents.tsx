@@ -58,7 +58,7 @@ export function CertificateDocumentsPanel({
         <div className="flex flex-wrap items-center justify-between gap-4 sm:col-span-2">
           <p className="min-w-0 flex-1 basis-64 text-sm text-muted-foreground">
             {!supported
-              ? "Certificates can only be generated for TEFL courses for now."
+              ? "Certificates can only be generated for TEFL and TESOL courses."
               : "Add the certificate number and issue date to generate the certificate and transcript."}
           </p>
           {supported && (

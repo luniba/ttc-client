@@ -46,7 +46,7 @@ export function GenerateCertificatesPage() {
   // Same key prefix as the preview's queries, so the button shows them loading.
   const generating =
     useIsFetching({ queryKey: ["admin", "certificates", payload] }) > 0
-  const courses = useTeflCourses()
+  const courses = useCertificateCourses()
 
   const onSubmit = form.handleSubmit((values) => {
     setPayload(values)
@@ -183,7 +183,7 @@ function EmptyPreview() {
 }
 
 // The courses that have a template. First 100 courses, like the candidate form.
-function useTeflCourses() {
+function useCertificateCourses() {
   const page = adminCourses.usePage({ page: 1, limit: 100, q: "" })
   return (page.data?.data ?? [])
     .filter((c) => hasCertificateTemplate(c.title))
